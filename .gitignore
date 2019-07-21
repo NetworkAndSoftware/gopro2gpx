@@ -1,7 +1,7 @@
 gopro2fit
 CMakeFiles/
 CMakeCache.txt
-out/
+windows/
 cmake_install.cmake
 samples/
 .vscode/
