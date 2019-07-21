@@ -1,0 +1,9 @@
+gopro2fit
+CMakeFiles/
+CMakeCache.txt
+out/
+cmake_install.cmake
+samples/
+.vscode/
+.vs/
+Makefile
