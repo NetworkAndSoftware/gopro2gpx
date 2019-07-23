@@ -1,41 +1,13 @@
+// Sun Jul 21 09:34:39 DST 2019
+// Copyright Michiel van Wessem
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include "platform.h"
 #include "gpx.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-#endif
-
-char* filename_from_filename(char* old_file_name, char* old_extension, char* new_extension)
-{
-  char* extension = strrchr(old_file_name, '.');
-  if (extension == NULL)
-    return NULL;
-
-  if (0 != strcasecmp(++extension, old_extension))
-    return NULL;
-
-  const size_t base_length = extension - old_file_name;
-  const size_t new_filename_size = base_length + strlen(new_extension) + 1;
-  char* new_file_name = malloc(new_filename_size);
-  if (new_file_name != NULL) {
-#if defined(_WIN32) || defined(_WIN64)
-    strncpy_s(new_file_name, new_filename_size, old_file_name, base_length);
-    strcpy_s(new_file_name + base_length, new_filename_size - base_length, new_extension);
-#else
-    strncpy(new_file_name, old_file_name, base_length);
-    strcpy(new_file_name + base_length, new_extension);
-#endif
-  }
-  return new_file_name;
-}
 
 void write_gpx_header(FILE* output)
 {
@@ -62,9 +34,9 @@ void write_gpx_track_point(FILE* output, const double latitude, const double lon
   time_t seconds = (time_t) floor(time);
   const double fraction = time - seconds;
 
-  const size_t n = strftime(s, sizeof(s), "%FT%T", gmtime(&seconds));
+  const size_t n = strftime(s, sizeof s, "%FT%T", gmtime(&seconds));
   if (n < sizeof(s))
-    snprintf(s + n, sizeof(s) - n, ".%03.0fZ", fraction * 1000);
+    snprintf(s + n, (sizeof s)  - n, ".%03.0fZ", fraction * 1000);
 
   fprintf(output, "\
       <trkpt lat=\"%f\" lon=\"%f\">\n\

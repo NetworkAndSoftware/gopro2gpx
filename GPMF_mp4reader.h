@@ -103,7 +103,7 @@ size_t OpenMP4SourceUDTA(char *filename);
 void CloseSource(size_t handle);
 float GetDuration(size_t handle);
 uint32_t GetNumberPayloads(size_t handle);
-uint32_t *GetPayload(size_t handle, uint32_t *last_payload, uint32_t index);
+uint32_t *GetPayload(const size_t handle, uint32_t *last_payload, const uint32_t index);
 void FreePayload(uint32_t *last_payload);
 uint32_t GetPayloadSize(size_t handle, uint32_t index);
 uint32_t GetPayloadTime(size_t handle, uint32_t index, double *in, double *out); //MP4 timestamps for the payload

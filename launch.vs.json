@@ -1,0 +1,14 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "gopro2gpx.exe",
+      "name": "gopro2gpx.exe",
+      //"args": [ "\"..\\..\\..\\samples1\\GH010177.mp4\"" ]
+      "args": [ "\"c:\\data\\Videos\\2019\\Perfect Commute\\Morning\\GH030147.MP4\"" ] 
+    }
+  ]
+}

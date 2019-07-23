@@ -24,7 +24,7 @@ From the command line simply run
 
 >gopro2gpx GH010177.MP4
 
-assuming GH010177.MP4 is the name of a GoPro video file. It will look for related MP4 files such as GH020177.MP4 GH030177.MP4 etc and process these in order to produce a single output file GH0177.gpx.
+assuming GH010177.MP4 is the name of a GoPro video file. It will look for related MP4 files such as GH020177.MP4 GH030177.MP4 etc and process these in order to produce a single gpx output file. This file will be named after the first input file in the set.
 
 If the filename of the MP4 file does not have that format, it will only process the single file and the output name will have the same base name as the mp4 file, eg gopro2gpx hello.mp4 will produce a file called hello.gpx.
 

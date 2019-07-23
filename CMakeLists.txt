@@ -2,12 +2,15 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
+
 project(gopro2gpx)
-include_directories(gpmf-parser)
-add_executable (gopro2gpx gopro2gpx.c GPMF_mp4reader.c gpx.c gpmf-parser/GPMF_parser.c)
+add_executable (gopro2gpx main.c GPMF_mp4reader.c gpx.c utils.c list.c platform.c mystring.c goprofilenames gpmf-parser/GPMF_parser.c)
+
+include_directories(gopro2gpx gpmf-parser)
 
 if (UNIX)
+  set(CMAKE_BUILD_TYPE Debug)
   target_link_libraries(gopro2gpx m)
 endif (UNIX)
 
-# TODO: Add tests and install targets if needed.
+add_definitions (-D_FILE_OFFSET_BITS=64)
