@@ -1,9 +1,9 @@
-#gopro2gpx
+# gopro2gpx
 Michiel van Wessem
 Saturday, 20. July 2019 05:32PM 
 
 
-##Introduction
+## Introduction
 
 gopro2gpx  was written to help display GPMD GPS data from GoPro videos, in particular for longer recordings where GoPro Quick does not suffice.
 
@@ -12,11 +12,11 @@ gopro2gpx extracts GPS data from Gopro MP4 videos and writes it to disk as a .gp
 
 During recording GoPro cameras  may create multiple MP4 files. If these files are located in the same directory gopro2gpx will try to find the related files and create a single gpx file for all these files combined.
 
-##Installation
+## Installation
 
 You can download a binary for Windows here and for Linux here. For other platforms, please download the source code and build the binary yourself. See the compilation section at the end of this page.
 
-##Usage
+## Usage
 
 This assumes you're able to use the command line interface or terminal on your system. On Windows that's the command prompt or powershell, on Linux/Unix it's a terminal.
 
@@ -39,14 +39,14 @@ Virbedit does not allow the gpx file to span multiple video clips, so before you
 
 Some massaging of the gpx files may be necessary. You can load them in a good text editor such as Vim and have at it.
 
-##Compilation
+## Compilation
 
 This project uses CMake to produce cross platform builds. 
 
-###Windows 
+### Windows 
 You can open the project folder with Visual Studio 2019 and simply pick the X64-Release configuration and build. This produces gopro2gpx.exe in a directory windows/build/X64-Release.
 
-###Linux
+### Linux
 Make sure you have gcc and cmake installed and there's a couple of other packages that you need.
 
 Then run ./cmake-linux. This creates a subdirectory linux and runs cmake from there. After that there are makefiles and you can cd to the linux directory and run make. This should produce the gopro2gpx binary in that directory. Copy to a suitable directory in your path and you're in business.
