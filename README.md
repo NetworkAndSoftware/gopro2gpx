@@ -7,7 +7,7 @@ Saturday, 20. July 2019 05:32PM
 
 gopro2gpx  was written to help display GPMD GPS data from GoPro videos, in particular for longer recordings where GoPro Quick does not suffice.
 
-gopro2gpx extracts GPS data from Gopro MP4 videos and writes it to disk as a .gpx file. It extracts latitude, longitude, elevation and time. So far I've only tested it with GoPro Hero 7 black but it should work with other cameras as well.
+gopro2gpx extracts GPS data from Gopro MP4 videos using GoPro's [gpmf-parser library](https://github.com/gopro/gpmf-parser) and writes the data to disk as a .gpx file. It extracts latitude, longitude, elevation and time. So far I've only tested it with GoPro Hero 7 black but it should work with other cameras as well.
 
 During recording GoPro cameras  may create multiple MP4 files. If these files are located in the same directory gopro2gpx will try to find the related files and create a single gpx file for all these files combined.
 
