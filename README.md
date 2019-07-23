@@ -38,15 +38,15 @@ Watch this video on how to use it: https://www.youtube.com/watch?v=s5v9ZCwcung
 
 ##Compilation
 
-This project uses CMake to produce cross platform builds. First run
->cmake projectdir
+This project uses CMake to produce cross platform builds. 
 
-where projectdir is the name of the gopro2gpx directory (you can use . if that's already your current directory.
+###Windows 
+You can open the project folder with Visual Studio 2019 and simply pick the X64-Release configuration and build. This produces gopro2gpx.exe in a directory windows/build/X64-Release.
 
-Then simply run 
->make 
+###Linux
+Make sure you have gcc and cmake installed and there's a couple of other packages that you need.
 
-This should build the gopro2gpx binary. Copy this to a suitable directory and you're in business.
+Then run ./cmake-linux. This creates a subdirectory linux and runs cmake from there. After that there are makefiles and you can cd to the linux directory and run make. This should produce the gopro2gpx binary in that directory. Copy to a suitable directory in your path and you're in business.
 
-On Windows, you can open the project directory in Visual Studio and build. It should see the CMake file and initialize things from there.
-
+## TO DO
+- Improve build process.
