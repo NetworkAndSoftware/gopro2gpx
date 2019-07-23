@@ -35,6 +35,8 @@ If the filename of the MP4 file does not have that format, it will only process 
 It's also possible to explicitly tell gopro2gpx to only process a single file. For this use:
 >gopro2gpx -s file.mp4
 
+Track point frequency in the gpx stream is now reduced to three samples per second. Contact me if this doesn't work for you.
+
 ## Using the GPX files
 Garmin has an terrific free tool called Virbedit that allows you to overlay gauges from .gpx or fit files onto video clips. 
 Watch this video on how to use it: https://www.youtube.com/watch?v=s5v9ZCwcung 
@@ -56,7 +58,5 @@ Make sure you have gcc and cmake installed and there's a couple of other package
 Then run ./cmake-linux. This creates a subdirectory linux and runs cmake from there. After that there are makefiles and you can cd to the linux directory and run make. This should produce the gopro2gpx binary in that directory. Copy to a suitable directory in your path and you're in business.
 
 ## TO DO
-- Filter out garbage in the GoPro stream.
-- Work on reducing track points, so that speed will be calculated better (unfortunately speed has been removed from the GPX format)
 - Improve build process, especially on Linux and for Visual Studio Code
 - Add unit tests
