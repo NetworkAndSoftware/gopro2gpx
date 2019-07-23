@@ -25,18 +25,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include <stdarg.h>
 
 #include "gpmf-parser/GPMF_parser.h"
 #include "GPMF_mp4reader.h"
-#include "platform.h"
 #include "gpx.h"
 #include "utils.h"
-#include "mystring.h"
 #include "list.h"
 #include "goprofilenames.h"
-
+#include "gpmf.h"
+#include <math.h>
 
 typedef struct mp4_with_name {
   const char* file_name;
@@ -98,6 +96,7 @@ node* filter_and_open_mp4s(node* file_names, char* provided_name, int index_of_p
   return mp4s;
 }
 
+
 int main(const int argc, char* argv[])
 {
   const char* usage = "usage: %s [-s] <GH010123.MP4>\n\n\tWhere GH010123.MP4 is the name of a GoPro video with GPS metadata.\n\n\tUse -s to process a single file only.\nVersion: 0.0.1\n";
@@ -152,12 +151,15 @@ int main(const int argc, char* argv[])
     if (_mp4_with_name == NULL)
       break;
 
-    const uint32_t payloads = GetNumberPayloads(_mp4_with_name->mp4);
+    gps_location average = (const gps_location){ 0 };
+    int average_count = 0;
+    double average_start_time = 0.0;
 
+    const uint32_t payloads = GetNumberPayloads(_mp4_with_name->mp4);
     for (uint32_t index = 0; index < payloads; index++) {
       const uint32_t payload_size = GetPayloadSize(_mp4_with_name->mp4, index);
-
       payload = GetPayload(_mp4_with_name->mp4, payload, index);
+
       if (payload != NULL)
       {
         double in = 0.0, out = 0.0; // times
@@ -168,32 +170,36 @@ int main(const int argc, char* argv[])
 
           if (GPMF_OK == GPMF_Init(ms, payload, payload_size))
           {
-            // Find GPS values and return scaled doubles.
-
-            if (GPMF_OK == GPMF_FindNext(ms, STR2FOURCC("GPS5"), GPMF_RECURSE_LEVELS) // GoPro Hero5/6/7 GPS
-              || GPMF_OK == GPMF_FindNext(ms, STR2FOURCC("GPRI"), GPMF_RECURSE_LEVELS)) // GoPro Karma GPS
+            if (get_GPS_Fix(ms) > 0 && get_GPS_Precision(ms) <= 500) // do not output if there is no GPS fix or the precision is more than 500m
             {
-              const uint32_t samples = GPMF_Repeat(ms);
-              const uint32_t elements = GPMF_ElementsInStruct(ms);
-              const uint32_t buffer_size = samples * elements * sizeof(double);
-              double* tmp_buffer = malloc(buffer_size);
-
-              if (tmp_buffer && samples && elements >= 5) {
-                // Output data in LittleEnd, but no scale
-                GPMF_ScaledData(ms,
-                  tmp_buffer,
-                  buffer_size,
-                  0,
-                  samples,
-                  GPMF_TYPE_DOUBLE); // Output scaled data as floats
-
-                for (uint32_t i = 0; i < samples; i++) {
-
+              // Find GPS values and return scaled doubles.
+              uint32_t samples;
+              gps_location* locations = get_gps_Locations(ms, &samples);
+              if (locations != NULL)
+              {
+                for (uint32_t i = 0; i < samples; i++)
+                {
                   const double sample_time = in + (double)i / (double)samples * (out - in);
+                  const gps_location location = locations[i];
 
-                  write_gpx_track_point(gpx, tmp_buffer[5 * i + 0], tmp_buffer[5 * i + 1], tmp_buffer[5 * i + 2], tmp_buffer[5 * i + 3], tmp_buffer[5 * i + 4], sample_time);
+                  update_average(location.latitude, &average.latitude, average_count);
+                  update_average(location.longitude, &average.longitude, average_count); // this is not a good way to average longitude but we don't care for now.
+                  update_average(location.elevation_wgs84, &average.elevation_wgs84, average_count);
+                  update_average(location.speed_ground, &average.speed_ground, average_count);
+                  update_average(location.speed_3d, &average.speed_3d, average_count);
+                  ++average_count;
+
+                  // if this sample is within 1/3 of a second of previous samples, average them and do not output.
+                  if (sample_time - average_start_time >= 1.0 / 3.0)
+                  {
+                    write_gpx_track_point(gpx, average.latitude, average.longitude, average.elevation_wgs84, average.speed_3d, average.speed_ground, sample_time);
+                    average = (const gps_location){ 0 };
+                    average_count = 0;
+                    average_start_time = sample_time;
+                  }
                 }
-                free(tmp_buffer);
+
+                free(locations);
               }
             }
             GPMF_ResetState(ms);

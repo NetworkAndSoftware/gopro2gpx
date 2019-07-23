@@ -66,3 +66,8 @@ void exit_not_implemented()
 {
   exit_with_error("Work in progress. This functionality has not been implemented yet!\n");
 }
+
+void update_average(const double d, double* average, int count)
+{
+  *average = (*average * (double) count + d) / ((double) count + 1);
+}

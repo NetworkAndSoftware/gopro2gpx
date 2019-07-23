@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 project(gopro2gpx)
-add_executable (gopro2gpx main.c GPMF_mp4reader.c gpx.c utils.c list.c platform.c mystring.c goprofilenames gpmf-parser/GPMF_parser.c)
+add_executable (gopro2gpx main.c GPMF_mp4reader.c gpx.c utils.c list.c platform.c mystring.c goprofilenames.c gpmf.c gpmf-parser/GPMF_parser.c gpmf)
 
 include_directories(gopro2gpx gpmf-parser)
 

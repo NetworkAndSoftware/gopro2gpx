@@ -10,4 +10,7 @@ const char* file_name(const char* path);
 
 void exit_not_implemented();
 void exit_with_error(const char* format, ...);
+
+void update_average(const double d, double* average, int count);
+
 #endif // UTILS_H
