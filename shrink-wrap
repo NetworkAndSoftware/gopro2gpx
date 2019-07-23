@@ -1,0 +1,4 @@
+#!/bin/sh
+
+zip -j binaries/gopro2gpx-linux-0.0.1.zip linux/gopro2gpx
+zip -j binaries/gopro2gpx-windows-0.0.1.zip windows/build/x64-Release/gopro2gpx.exe

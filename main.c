@@ -85,7 +85,6 @@ node* filter_and_open_mp4s(node* file_names, char* provided_name, int index_of_p
 
     list_insert(mp4, &mp4s);
   }
-    printf("index of provided file name: %d\n", list_size(file_names));
 
   for (node* n = list_element_at_index(index_of_provided_file_name, file_names)->next; n != NULL; n = n->next)
   {
@@ -96,14 +95,12 @@ node* filter_and_open_mp4s(node* file_names, char* provided_name, int index_of_p
     list_append(mp4, mp4s);
   }
 
-  printf("index of provided file name: %d\n", list_size(file_names));
-
   return mp4s;
 }
 
 int main(const int argc, char* argv[])
 {
-  const char* usage = "usage: %s [-s] <GH010123.MP4>\n\n\tWhere GH010123.MP4 is the name of a GoPro video with GPS metadata.\n\n\tUse -s to process a single file only.\n";
+  const char* usage = "usage: %s [-s] <GH010123.MP4>\n\n\tWhere GH010123.MP4 is the name of a GoPro video with GPS metadata.\n\n\tUse -s to process a single file only.\nVersion: 0.0.1\n";
 
   const int is_singlefile = (argc == 3 && 0 == strcmp(argv[1], "-s"));
 
