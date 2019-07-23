@@ -138,8 +138,6 @@ int main(const int argc, char* argv[])
     printf(" %s", ((mp4_with_name*)n->value)->file_name);
   printf("\nOutput file: %s\n", gpx_filename);
 
-  // ---
-
   FILE* gpx = fopen(gpx_filename, "w");
 
   if (gpx == NULL)
@@ -155,13 +153,15 @@ int main(const int argc, char* argv[])
       break;
 
     const uint32_t payloads = GetNumberPayloads(_mp4_with_name->mp4);
-    
+
     for (uint32_t index = 0; index < payloads; index++) {
       const uint32_t payload_size = GetPayloadSize(_mp4_with_name->mp4, index);
-      double in = 0.0, out = 0.0; // times
+
       payload = GetPayload(_mp4_with_name->mp4, payload, index);
       if (payload != NULL)
       {
+        double in = 0.0, out = 0.0; // times
+
         if (GPMF_OK == GetPayloadTime(_mp4_with_name->mp4, index, &in, &out))
         {
           GPMF_stream metadata_stream, * ms = &metadata_stream;
@@ -173,32 +173,12 @@ int main(const int argc, char* argv[])
             if (GPMF_OK == GPMF_FindNext(ms, STR2FOURCC("GPS5"), GPMF_RECURSE_LEVELS) // GoPro Hero5/6/7 GPS
               || GPMF_OK == GPMF_FindNext(ms, STR2FOURCC("GPRI"), GPMF_RECURSE_LEVELS)) // GoPro Karma GPS
             {
-
               const uint32_t samples = GPMF_Repeat(ms);
               const uint32_t elements = GPMF_ElementsInStruct(ms);
               const uint32_t buffer_size = samples * elements * sizeof(double);
-              GPMF_stream find_stream;
               double* tmp_buffer = malloc(buffer_size);
-              char units[10][6] = { "" };
 
               if (tmp_buffer && samples && elements >= 5) {
-                uint32_t i;
-
-                // Search for any units to display
-                GPMF_CopyState(ms, &find_stream);
-                if (GPMF_OK == GPMF_FindPrev(&find_stream, GPMF_KEY_SI_UNITS, GPMF_CURRENT_LEVEL) || GPMF_OK == GPMF_FindPrev(&find_stream, GPMF_KEY_UNITS, GPMF_CURRENT_LEVEL)) {
-                  char* data = (char*)GPMF_RawData(&find_stream);
-                  const int s_size = GPMF_StructSize(&find_stream);
-                  const uint32_t unit_samples = GPMF_Repeat(&find_stream);
-
-                  for (i = 0; i < unit_samples; i++) {
-                    memcpy(units[i], data, s_size);
-                    units[i][s_size] = 0;
-                    data += s_size;
-                  }
-                }
-
-                // GPMF_FormattedData(ms, tmpbuffer, buffersize, 0, samples); //
                 // Output data in LittleEnd, but no scale
                 GPMF_ScaledData(ms,
                   tmp_buffer,
@@ -207,7 +187,7 @@ int main(const int argc, char* argv[])
                   samples,
                   GPMF_TYPE_DOUBLE); // Output scaled data as floats
 
-                for (i = 0; i < samples; i++) {
+                for (uint32_t i = 0; i < samples; i++) {
 
                   const double sample_time = in + (double)i / (double)samples * (out - in);
 
@@ -216,14 +196,12 @@ int main(const int argc, char* argv[])
                 free(tmp_buffer);
               }
             }
-
             GPMF_ResetState(ms);
           }
         }
       }
-      
     }
-    
+
     CloseSource(_mp4_with_name->mp4);
     free((void*)_mp4_with_name->file_name);
     free(_mp4_with_name);
