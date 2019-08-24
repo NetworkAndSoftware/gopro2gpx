@@ -48,10 +48,18 @@ char* make_gopro_mp4_name(int chapter, int file_number, file_name_scheme scheme)
 
 node* make_node_if_exists(int file_number, node** filenames, const char* directory, int chapter, file_name_scheme scheme)
 {
-  char* fullname = malloc(strlen(directory) + 1 + 12 + 1);
   char* gopro_mp4_name = make_gopro_mp4_name(chapter, file_number, scheme);
-  sprintf(fullname, "%s%s%s", directory, preferred_path_separator, gopro_mp4_name);
-  free(gopro_mp4_name);
+
+  char* fullname;
+
+  if (directory == NULL)
+     fullname = gopro_mp4_name;
+  else
+  {
+    fullname = malloc(strlen(directory) + 1 + 12 + 1);
+    sprintf(fullname, "%s%s%s", directory, preferred_path_separator, gopro_mp4_name);
+    free(gopro_mp4_name);
+  }
 
   if (!file_exists(fullname))
   {
@@ -72,7 +80,7 @@ node* get_related_filenames(const char* given_filename, int is_singlefile, int *
   if (basename == NULL)
     basename = given_filename;
   else
-    ++basename;
+    ++basename; 
 
   if (is_singlefile || strlen(basename) != 12 || 0 != strcasecmp(basename + 8, ".MP4"))
     return list_node(given_filename);
@@ -155,8 +163,11 @@ node* get_related_filenames(const char* given_filename, int is_singlefile, int *
 
   node* filenames = list_node(given_filename);
   int l = 1;
-  char* directory = strdup(given_filename);
-  strrtok(directory, path_separators);
+  char* buffer = strdup(given_filename);
+  char* token = strrtok(buffer, path_separators);
+  
+  // this is a reverse search; if the first token found is the entire string, then there were no path separators at all and there is no directory, 
+  char* directory = token == buffer ?  NULL : buffer;
 
   // TODO: look for lower and higher chapters
   for (int i = zero_based_chapter - 1; i >= 0; i--) {
@@ -174,7 +185,7 @@ node* get_related_filenames(const char* given_filename, int is_singlefile, int *
     list_append(n, filenames);
     l++;
   }
-  free(directory);
+  free(buffer);
 
   return filenames;
 }

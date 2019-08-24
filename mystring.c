@@ -3,6 +3,8 @@
 
 #include <string.h>
 
+
+// returns a pointer to the last occurance in str1 of any of the characters that are part of str2, or a null pointer if there are no matches
 const char* strrpbrk(const char* str1, const char* str2)
 {
   if (str1 == NULL || str2 == NULL || *str1 == '\0' || *str2 == '\0')
