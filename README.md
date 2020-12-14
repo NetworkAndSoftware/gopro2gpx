@@ -54,10 +54,18 @@ This project uses CMake to produce cross platform builds.
 ### Windows 
 You can open the project folder with Visual Studio 2019 and simply pick the X64-Release configuration and build. This produces gopro2gpx.exe in a directory windows/build/X64-Release.
 
-### Linux
-Make sure you have gcc and cmake installed and there's a couple of other packages that you need.
+### Linux/MacOS
+Make sure you have gcc and cmake installed and there's a couple of other packages that you need. It should work out of the box on MacOS (tested on Big Sur).
+Clone repo with submodules, then run ./cmake-linux. This creates a subdirectory linux and runs cmake from there. After that there are makefiles and you can cd to the linux directory and run make. This should produce the gopro2gpx binary in that directory. Copy to a suitable directory in your path and you're in business.
 
-Then run ./cmake-linux. This creates a subdirectory linux and runs cmake from there. After that there are makefiles and you can cd to the linux directory and run make. This should produce the gopro2gpx binary in that directory. Copy to a suitable directory in your path and you're in business.
+```
+git clone --recurse-submodules -j8 https://github.com/NetworkAndSoftware/gopro2gpx.git
+cd gopro2gpx
+chmod +x cmake-linux
+./cmake-linux
+cd linux
+make
+```
 
 ## TO DO
 - Improve build process, especially on Linux and for Visual Studio Code
